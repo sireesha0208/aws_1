@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* General Styling */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; }
+        .container { display: flex; min-height: 100vh; }
+        
+        /* Sidebar Styling */
+        .sidebar {
+            width: 220px;
+            background-color: #112D4E;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .sidebar h2 { margin: 0 0 20px; }
+        .sidebar a {
+            color: #f4f6f9;
+            text-decoration: none;
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+            border-radius: 4px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .sidebar a:hover { background-color: #2a3e5d; }
+        /* Main Content Styling */
+        .main-content {
+            padding: 20px;
+            flex-grow: 1;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        h1, h2 { color: #112D4E; }
+        
+        /* Card & Form Styling */
+        .card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        form label { display: block; font-weight: bold; margin-top: 10px; color: #112D4E; }
+        .form-control, .btn { width: 100%; padding: 10px; margin-top: 5px; }
+        .btn {
+            background-color: #112D4E;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover { background-color: #2a3e5d; }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+        th {
+            background-color: #112D4E;
+            color: white;
+        }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:hover { background-color: #e0e6ed; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Dashboard</h2>
+            <a href="{% url 'trip_dashboard' %}">Trip List</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Form Section -->
+            <h1>Add New Request</h1>
+            <div class="card">
+                <form method="post">
+                    {% csrf_token %}
+                    <label for="aircraft">Select Aircraft</label>
+                    {{ form.aircraft }}
+                    
+                    <label for="origin">Origin</label>
+                    {{ form.origin }}
+                    
+                    <label for="destination">Destination</label>
+                    {{ form.destination }}
+                    
+                    <label for="departure_date_time">Departure Date & Time</label>
+                    {{ form.departure_date_time }}
+                    
+                    <label for="arrival_date_time">Arrival Date & Time</label>
+                    {{ form.arrival_date_time }}
+                    
+                    <label for="flight_time">Flight Time</label>
+                    {{ form.flight_time }}
+                    
+                    <button type="trip_details" class="btn">trip_details</button>
+
+                    <button type="submit" class="btn">submit</button>
+                </form>
+            </div>
+
+            <!-- Trip List Section -->
+            <h2>Trip List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aircraft</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Departure Date & Time</th>
+                        <th>Arrival Date & Time</th>
+                        <th>Flight Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in trips %}
+                    <tr>
+                        <td>{{ trip.aircraft.name }}</td>
+                        <td>{{ trip.origin }}</td>
+                        <td>{{ trip.destination }}</td>
+                        <td>{{ trip.departure_date_time }}</td>
+                        <td>{{ trip.arrival_date_time }}</td>
+                        <td>{{ trip.flight_time }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">No trips available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
